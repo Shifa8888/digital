@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Store Digital Products</title>
+<script src="https://cdn.zanderio.ai/widget/loader.js" data-id="wdg_GzIL9s8TakRythwtaxFM9c8q" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f6efe4;
+    --cream-2:#efe6d4;
+    --forest:#0f3d2e;
+    --forest-2:#0a2a1f;
+    --coral:#e85a4f;
+    --coral-2:#ff7b6b;
+    --gold:#d4a44a;
+    --ink:#1a1a1a;
+  }
+  *{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.serif{font-family:'Playfair Display',serif;letter-spacing:-0.01em;}
+  html,body{background:var(--cream);color:var(--ink);}
+  .bg-forest{background:var(--forest);}
+  .bg-forest-2{background:var(--forest-2);}
+  .text-forest{color:var(--forest);}
+  .border-forest{border-color:var(--forest);}
+  .bg-coral{background:var(--coral);}
+  .text-coral{color:var(--coral);}
+  .bg-cream{background:var(--cream);}
+  .bg-cream-2{background:var(--cream-2);}
+  .text-gold{color:var(--gold);}
+  .border-gold{border-color:var(--gold);}
+
+  /* Nav */
+  .nav-link{position:relative;padding:6px 0;font-weight:500;color:#2a2a2a;}
+  .nav-link::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--coral);transition:width .35s ease;}
+  .nav-link:hover::after,.nav-link.active::after{width:100%;}
+  .nav-link.active{color:var(--forest);}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:999px;font-weight:600;transition:all .3s ease;cursor:pointer;}
+  .btn-primary{background:var(--forest);color:var(--cream);}
+  .btn-primary:hover{background:var(--coral);transform:translateY(-2px);box-shadow:0 10px 25px -8px rgba(232,90,79,.45);}
+  .btn-outline{border:1.5px solid var(--forest);color:var(--forest);}
+  .btn-outline:hover{background:var(--forest);color:var(--cream);}
+  .btn-coral{background:var(--coral);color:#fff;}
+  .btn-coral:hover{background:var(--coral-2);transform:translateY(-2px);box-shadow:0 10px 25px -8px rgba(232,90,79,.45);}
+
+  /* Carousel */
+  .carousel{position:relative;overflow:hidden;border-radius:24px;}
+  .slides{display:flex;transition:transform .9s cubic-bezier(.77,0,.18,1);}
+  .slide{min-width:100%;position:relative;}
+  .slide img{width:100%;height:520px;object-fit:cover;}
+  .slide-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,42,31,.85) 0%,rgba(10,42,31,.35) 55%,transparent 100%);}
+  @media(max-width:768px){.slide img{height:380px;}}
+
+  /* Product card */
+  .product-card{background:#fff;border-radius:18px;overflow:hidden;transition:all .4s ease;border:1px solid #eadfce;}
+  .product-card:hover{transform:translateY(-6px);box-shadow:0 25px 50px -15px rgba(15,61,46,.18);}
+  .product-card img{transition:transform .6s ease;}
+  .product-card:hover img{transform:scale(1.06);}
+  .badge{position:absolute;top:12px;left:12px;background:var(--coral);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;letter-spacing:.5px;text-transform:uppercase;z-index:2;}
+
+  /* Color swatches */
+  .swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .25s ease;position:relative;}
+  .swatch.active{border-color:var(--forest);transform:scale(1.15);}
+  .swatch.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;text-shadow:0 0 3px rgba(0,0,0,.4);}
+
+  /* Modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(10,42,31,.55);backdrop-filter:blur(6px);z-index:60;display:none;align-items:flex-start;justify-content:center;padding:30px 15px;overflow-y:auto;}
+  .modal-backdrop.open{display:flex;animation:fadeIn .3s ease;}
+  .modal-box{background:#fff;border-radius:22px;max-width:680px;width:100%;padding:32px;animation:slideUp .4s ease;max-height:calc(100vh - 60px);overflow-y:auto;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+  /* Page transitions */
+  .page{display:none;animation:pageIn .5s ease;}
+  .page.active{display:block;}
+  @keyframes pageIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+
+  /* Reveal on scroll */
+  .reveal{opacity:0;transform:translateY(30px);transition:all .8s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* Inputs */
+  .field{width:100%;padding:12px 16px;border:1.5px solid #ddd1bd;border-radius:12px;background:#fffcf6;transition:all .25s ease;font-size:15px;}
+  .field:focus{outline:none;border-color:var(--forest);box-shadow:0 0 0 4px rgba(15,61,46,.1);}
+
+  /* Cart dot pulse */
+  @keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.4);}100%{transform:scale(1);}}
+  .cart-count{animation:pop .4s ease;}
+
+  /* Toast */
+  .toast{position:fixed;top:90px;right:20px;background:var(--forest);color:var(--cream);padding:14px 22px;border-radius:12px;z-index:100;transform:translateX(120%);transition:transform .4s ease;box-shadow:0 15px 40px -10px rgba(0,0,0,.3);}
+  .toast.show{transform:translateX(0);}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:var(--cream-2);}
+  ::-webkit-scrollbar-thumb{background:var(--forest);border-radius:10px;}
+
+  /* Marquee */
+  .marquee{display:flex;overflow:hidden;}
+  .marquee-track{display:flex;gap:50px;animation:scroll 30s linear infinite;white-space:nowrap;padding-right:50px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* Mobile menu */
+  .mobile-menu{position:fixed;top:0;right:-100%;width:75%;max-width:340px;height:100vh;background:var(--cream);z-index:70;transition:right .4s ease;padding:80px 30px 30px;box-shadow:-10px 0 40px rgba(0,0,0,.15);}
+  .mobile-menu.open{right:0;}
+
+  /* Payment method tabs */
+  .pay-tab{flex:1;padding:14px;border:2px solid #eadfce;border-radius:14px;cursor:pointer;text-align:center;transition:all .3s ease;background:#fff;}
+  .pay-tab.active{border-color:var(--forest);background:var(--forest);color:var(--cream);}
+  .pay-tab:hover:not(.active){border-color:var(--coral);}
+
+  /* Dots for carousel */
+  .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .3s;}
+  .dot.active{background:#fff;width:30px;border-radius:5px;}
+
+  /* Floating badge */
+  .float-tag{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--forest-2);padding:6px 14px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;box-shadow:0 8px 20px -5px rgba(212,164,74,.6);}
+
+  /* Zanderio Widget Fix - LEFT SIDE POSITION */
+  #zanderio-widget, [id^="zanderio"], [class*="zanderio"]{
+    z-index:999999!important;
+    position:fixed!important;
+    pointer-events:auto!important;
+    opacity:1!important;
+    visibility:visible!important;
+    display:block!important;
+    left:20px!important;
+    right:auto!important;
+    bottom:20px!important;
+  }
+  iframe[src*="zanderio"]{
+    z-index:999999!important;
+    position:fixed!important;
+    opacity:1!important;
+    visibility:visible!important;
+    display:block!important;
+    left:20px!important;
+    right:auto!important;
+    bottom:20px!important;
+  }
+</style>
+</head>
+<body>
+
+<script>
+// Zanderio Widget Force Visibility - LEFT SIDE
+(function() {
+  function forceZanderioVisible() {
+    const zanderioElements = document.querySelectorAll('[id*="zanderio"], [class*="zanderio"], iframe[src*="zanderio"]');
+    zanderioElements.forEach(el => {
+      el.style.cssText += 'z-index: 999999 !important; position: fixed !important; opacity: 1 !important; visibility: visible !important; display: block !important; pointer-events: auto !important; left: 20px !important; right: auto !important; bottom: 20px !important;';
+    });
+  }
+  
+  // Run immediately
+  forceZanderioVisible();
+  
+  // Run after DOM loads
+  document.addEventListener('DOMContentLoaded', forceZanderioVisible);
+  
+  // Run after a delay for dynamic loading
+  setTimeout(forceZanderioVisible, 1000);
+  setTimeout(forceZanderioVisible, 3000);
+  
+  // Watch for new elements
+  const observer = new MutationObserver(forceZanderioVisible);
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+
+<!--  NAV -->
+<header class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-[#eadfce]">
+  <div class="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
+    <a href="#" onclick="showPage('home')" class="flex items-center gap-2">
+      <div class="w-10 h-10 bg-forest rounded-full flex items-center text-white justify-center text-cream font-bold serif text-xl">S</div>
+      <div class="serif text-2xl font-bold text-forest leading-none">Store-Digital</div>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      <a class="nav-link active" data-page="home" onclick="showPage('home')">Home</a>
+      <a class="nav-link" data-page="collection" onclick="showPage('collection')">Collection</a>
+      <a class="nav-link" data-page="orders" onclick="showPage('orders')">My Orders</a>
+      <a class="nav-link" data-page="about" onclick="showPage('about')">About</a>
+      <a class="nav-link" data-page="privacy" onclick="showPage('privacy')">Privacy Policy</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <button onclick="toggleSearch()" class="w-10 h-10 rounded-full hover:bg-cream-2 flex items-center justify-center" title="Search">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button onclick="openCart()" class="relative w-10 h-10 rounded-full hover:bg-cream-2 flex items-center justify-center" title="Cart">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span id="cartBadge" class="absolute -top-1 -right-1 bg-coral text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
+      </button>
+      <button onclick="toggleMobile()" class="md:hidden w-10 h-10 rounded-full hover:bg-cream-2 flex items-center justify-center">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div id="searchBar" class="hidden border-t border-[#eadfce] bg-cream">
+    <div class="max-w-7xl mx-auto px-5 py-4">
+      <input id="globalSearch" oninput="handleSearch(this.value)" class="field" placeholder="Search ebooks, templates, courses, presets…" />
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div id="mobileMenu" class="mobile-menu">
+  <button onclick="toggleMobile()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-cream-2">✕</button>
+  <nav class="flex flex-col gap-6 text-xl">
+    <a onclick="showPage('home');toggleMobile()">Home</a>
+    <a onclick="showPage('collection');toggleMobile()">Collection</a>
+    <a onclick="showPage('orders');toggleMobile()">My Orders</a>
+    <a onclick="showPage('about');toggleMobile()">About</a>
+    <a onclick="showPage('privacy');toggleMobile()">Privacy Policy</a>
+  </nav>
+  <div class="mt-10 pt-6 border-t border-[#eadfce] text-sm text-gray-600">
+    <p>✉ hello@pixelhive.shop</p>
+    <p class="mt-2">📞 +92 348 0103280</p>
+  </div>
+</div>
+
+<!-- ============== HOME PAGE ============== -->
+<main id="page-home" class="page active">
+
+  <!-- Hero Carousel -->
+  <section class="max-w-7xl mx-auto px-5 pt-8">
+    <div class="carousel" id="carousel">
+      <div class="slides" id="slides">
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=1600&q=80" alt="Digital products">
+          <div class="slide-overlay"></div>
+          <div class="absolute inset-0 flex items-center px-6 md:px-16">
+            <div class="max-w-xl text-cream">
+              <span class="inline-block bg-coral text-white text-xs font-bold px-3 py-1 rounded-full tracking-widest uppercase mb-4">New Arrival</span>
+              <h1 class="text-4xl md:text-6xl font-bold leading-tight text-white">Premium Digital<br/>Templates & Assets</h1>
+              <p class="mt-4 text-cream/90 text-lg text-white">Curated ebooks, UI kits, Lightroom presets, Notion <br/> templates and pro courses — ready to download instantly.</p>
+              <div class="mt-7 flex gap-3 flex-wrap">
+                <button class="btn btn-coral" onclick="showPage('collection')">Shop Now →</button>
+                <button class="btn btn-outline text-cream border-cream" onclick="showPage('about')">Learn More</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1600&q=80" alt="Courses">
+          <div class="slide-overlay"></div>
+          <div class="absolute inset-0 flex items-center px-6 md:px-16">
+            <div class="max-w-xl text-cream">
+              <span class="inline-block bg-gold text-forest-2 text-xs font-bold px-3 py-1 rounded-full tracking-widest uppercase mb-4">Bestseller</span>
+              <h1 class="text-4xl md:text-6xl font-bold leading-tight text-white">Learn From The<br/>Best In The Industry</h1>
+              <p class="mt-4 text-cream/90 text-lg text-white">Video courses from industry pros. Design, coding, marketing — level up your skills today.</p>
+              <div class="mt-7 flex gap-3 flex-wrap">
+                <button class="btn btn-coral" onclick="showPage('collection')">Browse Courses →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?w=1600&q=80" alt="UI kits">
+          <div class="slide-overlay"></div>
+          <div class="absolute inset-0 flex items-center px-6 md:px-16">
+            <div class="max-w-xl text-cream">
+              <span class="inline-block bg-coral text-white text-xs font-bold px-3 py-1 rounded-full tracking-widest uppercase mb-4">Limited Offer</span>
+              <h1 class="text-4xl md:text-6xl font-bold leading-tight text-white">Flat 40% OFF<br/>On UI Kits</h1>
+              <p class="mt-4 text-cream/90 text-lg text-white">Figma & Sketch design systems with 500+ components. Ship beautiful products faster.</p>
+              <div class="mt-7 flex gap-3 flex-wrap">
+                <button class="btn btn-coral" onclick="showPage('collection')">Grab The Deal →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1600&q=80" alt="Presets">
+          <div class="slide-overlay"></div>
+          <div class="absolute inset-0 flex items-center px-6 md:px-16">
+            <div class="max-w-xl text-cream">
+              <span class="inline-block bg-gold text-forest-2 text-xs font-bold px-3 py-1 rounded-full tracking-widest uppercase mb-4">Trending</span>
+              <h1 class="text-4xl md:text-6xl font-bold leading-tight text-white">Cinematic<br/>Lightroom Presets</h1>
+              <p class="mt-4 text-cream/90 text-lg text-white">Professional color grading in one click. Used by 10,000+ photographers worldwide.</p>
+              <div class="mt-7 flex gap-3 flex-wrap">
+                <button class="btn btn-coral" onclick="showPage('collection')">Explore Presets →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carousel arrows -->
+      <button onclick="moveSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-cream/90 text-forest hover:bg-coral hover:text-white transition-all flex items-center justify-center shadow-lg">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button onclick="moveSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-cream/90 text-forest hover:bg-coral hover:text-white transition-all flex items-center justify-center shadow-lg">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2" id="dots"></div>
+    </div>
+  </section>
+
+  <!-- Marquee banner -->
+  <section class="mt-10 bg-forest text-cream py-4 overflow-hidden">
+    <div class="marquee">
+      <div class="marquee-track font-bold tracking-widest text-white text-sm uppercase">
+        <span>✦ Instant Download</span><span>✦ 100% Secure Payment</span><span>✦ EasyPaisa Accepted</span><span>✦ JazzCash Accepted</span><span>✦ 24/7 Support</span><span>✦ 10k+ Happy Customers</span><span>✦ Premium Quality</span>
+        <span>✦ Instant Download</span><span>✦ 100% Secure Payment</span><span>✦ EasyPaisa Accepted</span><span>✦ JazzCash Accepted</span><span>✦ 24/7 Support</span><span>✦ 10k+ Happy Customers</span><span>✦ Premium Quality</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="max-w-7xl mx-auto px-5 py-16 reveal">
+    <div class="flex items-end justify-between mb-10 flex-wrap gap-4">
+      <div>
+        <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-2">Shop By Category</p>
+        <h2 class="text-4xl md:text-5xl font-bold text-forest">Handpicked For You</h2>
+      </div>
+      <a onclick="showPage('collection')" class="text-forest font-semibold hover:text-coral cursor-pointer">View All →</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+      <div onclick="filterByCategory('ebooks')" class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/5]">
+        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-forest-2/90 via-forest-2/30 to-transparent"></div>
+        <div class="absolute bottom-4 left-4 text-cream">
+          <p class="text-xs tracking-widest uppercase text-gold">Collection</p>
+          <h3 class="text-2xl font-bold serif">Ebooks</h3>
+        </div>
+      </div>
+      <div onclick="filterByCategory('templates')" class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/5]">
+        <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-forest-2/90 via-forest-2/30 to-transparent"></div>
+        <div class="absolute bottom-4 left-4 text-cream">
+          <p class="text-xs tracking-widest uppercase text-gold">Collection</p>
+          <h3 class="text-2xl font-bold serif">Templates</h3>
+        </div>
+      </div>
+      <div onclick="filterByCategory('courses')" class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/5]">
+        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-forest-2/90 via-forest-2/30 to-transparent"></div>
+        <div class="absolute bottom-4 left-4 text-cream">
+          <p class="text-xs tracking-widest uppercase text-gold">Collection</p>
+          <h3 class="text-2xl font-bold serif">Courses</h3>
+        </div>
+      </div>
+      <div onclick="filterByCategory('presets')" class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/5]">
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-forest-2/90 via-forest-2/30 to-transparent"></div>
+        <div class="absolute bottom-4 left-4 text-cream">
+          <p class="text-xs tracking-widest uppercase text-gold">Collection</p>
+          <h3 class="text-2xl font-bold serif">Presets</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured products -->
+  <section class="max-w-7xl mx-auto px-5 py-10 reveal">
+    <div class="text-center mb-12">
+      <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-2">Featured</p>
+      <h2 class="text-4xl md:text-5xl font-bold text-forest">Bestsellers This Week</h2>
+    </div>
+    <div id="featuredGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+<section class="bg-forest text-white py-20 mt-10 reveal">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="text-center mb-14">
+      <p class="text-white font-semibold tracking-widest uppercase text-sm mb-2">Why PixelHive</p>
+      <h2 class="text-4xl md:text-5xl font-bold text-white">Crafted For Creators Like You</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-forest-2 rounded-2xl p-8 hover:-translate-y-2 transition-transform duration-300">
+        <div class="w-14 h-14 bg-coral rounded-xl flex items-center justify-center mb-5 text-2xl">⚡</div>
+        <h3 class="serif text-2xl font-bold mb-3 text-white">Instant Download</h3>
+        <p class="text-white/70 leading-relaxed">Get your files within seconds of confirmed payment. No waiting, no delays — just pure productivity.</p>
+      </div>
+      <div class="bg-forest-2 rounded-2xl p-8 hover:-translate-y-2 transition-transform duration-300">
+        <div class="w-14 h-14 bg-gold rounded-xl flex items-center justify-center mb-5 text-2xl">🔒</div>
+        <h3 class="serif text-2xl font-bold mb-3 text-white">Secure Payments</h3>
+        <p class="text-white/70 leading-relaxed">Pay via EasyPaisa or JazzCash with complete safety. Your transaction details are 100% protected.</p>
+      </div>
+      <div class="bg-forest-2 rounded-2xl p-8 hover:-translate-y-2 transition-transform duration-300">
+        <div class="w-14 h-14 bg-coral rounded-xl flex items-center justify-center mb-5 text-2xl">💎</div>
+        <h3 class="serif text-2xl font-bold mb-3 text-white">Premium Quality</h3>
+        <p class="text-white/70 leading-relaxed">Every asset is handcrafted by industry professionals. Commercial license included on most items.</p>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- Testimonials -->
+  <section class="max-w-7xl mx-auto px-5 py-20 reveal">
+    <div class="text-center mb-12">
+      <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-2">Reviews</p>
+      <h2 class="text-4xl md:text-5xl font-bold text-forest">Loved By 10,000+ Creators</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-cream-2 rounded-2xl p-8">
+        <div class="flex gap-1 text-gold text-xl mb-3">★★★★★</div>
+        <p class="text-ink/80 leading-relaxed mb-5">"The Lightroom presets completely transformed my Instagram feed. Worth every penny — the cinematic tones are insane!"</p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/60?img=32" class="w-11 h-11 rounded-full">
+          <div><p class="font-bold text-forest">Ayesha K.</p><p class="text-sm text-gray-500">Photographer</p></div>
+        </div>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-8">
+        <div class="flex gap-1 text-gold text-xl mb-3">★★★★★</div>
+        <p class="text-ink/80 leading-relaxed mb-5">"Saved me 3 weeks of work. The Figma templates are beautifully organized and so easy to customize. Highly recommend!"</p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/60?img=12" class="w-11 h-11 rounded-full">
+          <div><p class="font-bold text-forest">Hamza R.</p><p class="text-sm text-gray-500">UI Designer</p></div>
+        </div>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-8">
+        <div class="flex gap-1 text-gold text-xl mb-3">★★★★★</div>
+        <p class="text-ink/80 leading-relaxed mb-5">"EasyPaisa payment was super smooth. Got my course access in minutes. The content quality is world-class."</p>
+        <div class="flex items-center gap-3">
+          <img src="https://i.pravatar.cc/60?img=47" class="w-11 h-11 rounded-full">
+          <div><p class="font-bold text-forest">Sara M.</p><p class="text-sm text-gray-500">Freelancer</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== COLLECTION PAGE ============== -->
+<main id="page-collection" class="page">
+  <section class="max-w-7xl mx-auto px-5 py-10">
+    <div class="mb-8">
+      <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-2">Our Products</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-forest">The Complete Collection</h1>
+      <p class="text-gray-600 mt-3">Browse all premium digital products available in our store.</p>
+    </div>
+
+    <div class="flex gap-8 flex-col lg:flex-row">
+      <!-- Left Filter -->
+      <aside class="lg:w-64 shrink-0">
+        <div class="bg-white rounded-2xl p-6 border border-[#eadfce] sticky top-24">
+          <!-- Search -->
+          <div class="mb-6">
+            <label class="font-bold text-forest mb-3 block text-sm tracking-wide uppercase">Search</label>
+            <input id="collSearch" oninput="renderProducts()" class="field" placeholder="Search products…">
+          </div>
+
+          <!-- Category -->
+          <div class="mb-6">
+            <label class="font-bold text-forest mb-3 block text-sm tracking-wide uppercase">Category</label>
+            <div class="space-y-2" id="categoryFilters"></div>
+          </div>
+
+          <!-- Color -->
+          <div class="mb-6">
+            <label class="font-bold text-forest mb-3 block text-sm tracking-wide uppercase">Color Theme</label>
+            <div class="flex flex-wrap gap-3" id="colorSwatches"></div>
+          </div>
+
+          <!-- Price -->
+          <div class="mb-6">
+            <label class="font-bold text-forest mb-3 block text-sm tracking-wide uppercase">Price (PKR)</label>
+            <input id="priceRange" type="range" min="500" max="25000" step="500" value="25000" oninput="renderProducts();document.getElementById('priceLabel').innerText='Up to '+this.value" class="w-full accent-[var(--forest)]">
+            <p id="priceLabel" class="text-sm text-gray-500 mt-1">Up to 25000</p>
+          </div>
+
+          <!-- Sort -->
+          <div class="mb-2">
+            <label class="font-bold text-forest mb-3 block text-sm tracking-wide uppercase">Sort By</label>
+            <select id="sortSelect" onchange="renderProducts()" class="field">
+              <option value="featured">Featured</option>
+              <option value="low">Price: Low to High</option>
+              <option value="high">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+            </select>
+          </div>
+
+          <button onclick="resetFilters()" class="btn btn-outline w-full mt-5 text-sm">Reset Filters</button>
+        </div>
+      </aside>
+
+      <!-- Products grid -->
+      <div class="flex-1">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <p id="resultCount" class="text-gray-600">Showing 16 products</p>
+        </div>
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== MY ORDERS PAGE ============== -->
+<main id="page-orders" class="page">
+  <section class="max-w-7xl mx-auto px-5 py-10">
+    <div class="mb-8">
+      <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-2">Your Account</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-forest">My Orders</h1>
+      <p class="text-gray-600 mt-3">View your order history and download purchased products.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- User Info Card -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-2xl p-6 border border-[#eadfce] sticky top-24">
+          <h3 class="serif text-xl font-bold text-forest mb-4">Account Information</h3>
+          <div id="userInfoDisplay" class="space-y-3 text-sm">
+            <div class="text-center text-gray-500 py-4">No saved information</div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-[#eadfce] text-sm text-gray-500">
+            <p><strong>Total Orders:</strong> <span id="totalOrders">0</span></p>
+            <p><strong>Total Spent:</strong> PKR <span id="totalSpent">0</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders List -->
+      <div class="lg:col-span-2">
+        <div id="ordersContainer" class="space-y-4">
+          <div class="text-center py-12 text-gray-500">
+            <div class="text-5xl mb-3">📦</div>
+            <p class="font-semibold">No orders found</p>
+            <button onclick="showPage('collection')" class="btn btn-primary mt-4">Start Shopping</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== ABOUT PAGE ============== -->
+<main id="page-about" class="page">
+  <section class="max-w-7xl mx-auto px-5 py-14">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-3">About PixelHive</p>
+        <h1 class="text-4xl md:text-6xl font-bold text-forest leading-tight serif">We craft digital tools that empower creators.</h1>
+        <p class="text-gray-600 mt-6 text-lg leading-relaxed">PixelHive is a premium marketplace for high-quality digital products — from UI templates and Lightroom presets to professional courses and ebooks. We believe creators deserve beautiful, ready-to-use assets that save time and amplify creativity.</p>
+        <p class="text-gray-600 mt-4 text-lg leading-relaxed">Founded in 2022, we've served over 10,000 happy customers across Pakistan and beyond. Every product is handpicked by our team of designers and educators.</p>
+        <div class="mt-8 grid grid-cols-3 gap-5">
+          <div class="bg-cream-2 rounded-2xl p-5 text-center"><p class="text-3xl font-bold text-forest">10k+</p><p class="text-sm text-gray-500">Customers</p></div>
+          <div class="bg-cream-2 rounded-2xl p-5 text-center"><p class="text-3xl font-bold text-forest">500+</p><p class="text-sm text-gray-500">Products</p></div>
+          <div class="bg-cream-2 rounded-2xl p-5 text-center"><p class="text-3xl font-bold text-forest">4.9★</p><p class="text-sm text-gray-500">Rating</p></div>
+        </div>
+      </div>
+      <div class="relative">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80" class="rounded-3xl shadow-2xl w-full">
+        <div class="absolute -bottom-6 -left-6 bg-coral text-white rounded-2xl p-5 shadow-xl max-w-[200px]">
+          <p class="serif text-2xl font-bold">Since 2022</p>
+          <p class="text-sm text-white/80">Crafting for creators worldwide</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="mt-20 reveal">
+      <div class="text-center mb-12">
+        <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-2">Meet The Team</p>
+        <h2 class="text-4xl md:text-5xl font-bold text-forest">The Minds Behind PixelHive</h2>
+      </div>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="text-center group">
+          <div class="overflow-hidden rounded-2xl mb-4"><img src="https://i.pravatar.cc/300?img=11" class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"></div>
+          <h3 class="serif text-xl font-bold text-forest">Ali Ahmed</h3>
+          <p class="text-coral text-sm">Founder & CEO</p>
+        </div>
+        <div class="text-center group">
+          <div class="overflow-hidden rounded-2xl mb-4"><img src="https://i.pravatar.cc/300?img=45" class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"></div>
+          <h3 class="serif text-xl font-bold text-forest">Fatima Khan</h3>
+          <p class="text-coral text-sm">Lead Designer</p>
+        </div>
+        <div class="text-center group">
+          <div class="overflow-hidden rounded-2xl mb-4"><img src="https://i.pravatar.cc/300?img=13" class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"></div>
+          <h3 class="serif text-xl font-bold text-forest">Bilal Raza</h3>
+          <p class="text-coral text-sm">Product Manager</p>
+        </div>
+        <div class="text-center group">
+          <div class="overflow-hidden rounded-2xl mb-4"><img src="https://i.pravatar.cc/300?img=48" class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"></div>
+          <h3 class="serif text-xl font-bold text-forest">Hina Malik</h3>
+          <p class="text-coral text-sm">Customer Success</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="mt-20 bg-forest rounded-3xl p-10 text-cream reveal">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <p class="text-gold font-semibold tracking-widest uppercase text-sm mb-3">Get In Touch</p>
+          <h2 class="text-4xl font-bold serif">Let's work together.</h2>
+          <p class="text-cream/80 mt-4">Have questions, custom requests, or partnership ideas? We'd love to hear from you.</p>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 bg-forest-2 rounded-xl p-4"><span class="text-2xl">📞</span><div><p class="text-xs text-gold uppercase tracking-wider">Call / WhatsApp</p><p class="font-semibold">+92 348 0103280</p></div></div>
+          <div class="flex items-center gap-4 bg-forest-2 rounded-xl p-4"><span class="text-2xl">✉</span><div><p class="text-xs text-gold uppercase tracking-wider">Email</p><p class="font-semibold">hello@pixelhive.shop</p></div></div>
+          <div class="flex items-center gap-4 bg-forest-2 rounded-xl p-4"><span class="text-2xl">📍</span><div><p class="text-xs text-gold uppercase tracking-wider">Location</p><p class="font-semibold">Lahore, Pakistan</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== PRIVACY PAGE ============== -->
+<main id="page-privacy" class="page">
+  <section class="max-w-4xl mx-auto px-5 py-14">
+    <p class="text-coral font-semibold tracking-widest uppercase text-sm mb-3">Legal</p>
+    <h1 class="text-4xl md:text-5xl font-bold text-forest serif">Privacy Policy</h1>
+    <p class="text-gray-500 mt-2">Last updated: January 2026</p>
+
+    <div class="mt-10 space-y-8 text-gray-700 leading-relaxed text-[15px]">
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">1. Introduction</h3>
+        <p>Welcome to PixelHive. We respect your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and safeguard your information when you visit our store and purchase digital products.</p>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">2. Information We Collect</h3>
+        <p>We collect your name, email address, phone number, and payment proof screenshots when you place an order. This information is necessary to deliver your purchased digital products and process your payment verification.</p>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">3. How We Use Your Data</h3>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>To process orders and deliver digital files</li>
+          <li>To verify EasyPaisa / JazzCash payment screenshots</li>
+          <li>To send order confirmations and download links via email</li>
+          <li>To improve our products and customer experience</li>
+          <li>To respond to your queries and support requests</li>
+        </ul>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">4. Data Sharing</h3>
+        <p>We never sell or rent your personal information. Payment details are only shared with our payment processors (EasyPaisa, JazzCash) to verify transactions. Screenshots are deleted after verification is complete.</p>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">5. Data Security</h3>
+        <p>We implement industry-standard security measures to protect your data. All payment screenshots are stored on encrypted servers and access is restricted to authorized staff only.</p>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">6. Your Rights</h3>
+        <p>You have the right to access, update, or delete your personal data at any time. Simply contact us at <strong>hello@pixelhive.shop</strong> or WhatsApp <strong>+92 348 0103280</strong> to make a request.</p>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">7. Cookies</h3>
+        <p>Our website uses essential cookies to maintain your shopping cart and session. We do not use third-party tracking cookies for advertising.</p>
+      </div>
+      <div class="bg-cream-2 rounded-2xl p-6">
+        <h3 class="serif text-2xl font-bold text-forest mb-3">8. Contact Us</h3>
+        <p>If you have any questions about this Privacy Policy, please reach out:</p>
+        <p class="mt-2">📧 hello@pixelhive.shop<br/>📞 +92 348 0103280<br/>📍 Lahore, Pakistan</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============== FOOTER ============== -->
+<footer class="bg-forest-2 text-white pt-16 pb-8 mt-10">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="grid md:grid-cols-4 gap-10">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-10 h-10 bg-coral rounded-full flex items-center justify-center font-bold serif text-xl text-white">S</div>
+          <div class="serif text-2xl font-bold text-white">Store-Digital</div>
+        </div>
+        <p class="text-white/70 text-sm leading-relaxed">Premium digital products for creators, designers, and entrepreneurs. Shop ebooks, templates, courses & presets.</p>
+        <div class="flex gap-3 mt-5">
+          <a class="w-9 h-9 bg-cream/10 hover:bg-coral rounded-full flex items-center justify-center transition text-white">f</a>
+          <a class="w-9 h-9 bg-cream/10 hover:bg-coral rounded-full flex items-center justify-center transition text-white">ig</a>
+          <a class="w-9 h-9 bg-cream/10 hover:bg-coral rounded-full flex items-center justify-center transition text-white">tw</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-bold mb-4 text-gold uppercase tracking-wider text-sm">Quick Links</h4>        <ul class="space-y-2 text-sm text-white/70">
+          <li><a onclick="showPage('home')" class="hover:text-coral cursor-pointer text-white">Home</a></li>
+          <li><a onclick="showPage('collection')" class="hover:text-coral cursor-pointer text-white">Collection</a></li>
+          <li><a onclick="showPage('orders')" class="hover:text-coral cursor-pointer text-white">My Orders</a></li>
+          <li><a onclick="showPage('about')" class="hover:text-coral cursor-pointer text-white">About Us</a></li>
+          <li><a onclick="showPage('privacy')" class="hover:text-coral cursor-pointer text-white">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-4 text-gold uppercase tracking-wider text-sm">Categories</h4>
+        <ul class="space-y-2 text-sm text-white/70">
+          <li><a onclick="filterByCategory('ebooks')" class="hover:text-coral cursor-pointer text-white">Ebooks</a></li>
+          <li><a onclick="filterByCategory('templates')" class="hover:text-coral cursor-pointer text-white">Templates</a></li>
+          <li><a onclick="filterByCategory('courses')" class="hover:text-coral cursor-pointer text-white">Courses</a></li>
+          <li><a onclick="filterByCategory('presets')" class="hover:text-coral cursor-pointer text-white">Presets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-4 text-gold uppercase tracking-wider text-sm">Contact</h4>
+        <ul class="space-y-2 text-sm text-white/70">
+          <li class="text-white">📞 +92 348 0103280</li>
+          <li class="text-white">✉ hello@store.shop</li>
+          <li class="text-white">📍 Lahore, Pakistan</li>
+    <li class="pt-2"><span class="inline-block bg-coral px-3 py-1 rounded-full text-xs font-bold">EasyPaisa</span> <span class="inline-block bg-gold text-forest-2 px-3 py-1 rounded-full text-xs font-bold ml-1">JazzCash</span></li>        </ul>
+      </div>
+    </div>
+    <div class="border-t border-cream/10 mt-10 pt-6 text-center text-white/50 text-sm">
+      © 2026 Store-Digital. All rights reserved. Made with ♥ in Pakistan.
+    </div>
+  </div>
+</footer>
+<!-- ============== CART MODAL ============== -->
+<div id="cartModal" class="modal-backdrop" onclick="if(event.target===this)closeCart()">
+  <div class="modal-box">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="serif text-3xl font-bold text-forest">Your Cart</h2>
+      <button onclick="closeCart()" class="w-10 h-10 rounded-full hover:bg-cream-2 flex items-center justify-center">✕</button>
+    </div>
+    <div id="cartItems" class="space-y-3 mb-4"></div>
+    <div id="cartEmpty" class="text-center py-12 text-gray-500">
+      <div class="text-5xl mb-3">🛍</div>
+      <p class="font-semibold">Your cart is empty</p>
+      <button onclick="closeCart();showPage('collection')" class="btn btn-primary mt-4">Start Shopping</button>
+    </div>
+    <div id="cartSummary" class="hidden border-t border-[#eadfce] pt-4 space-y-2">
+      <div class="flex justify-between text-gray-600"><span>Subtotal</span><span id="subtotal">PKR 0</span></div>
+      <div class="flex justify-between font-bold text-forest text-lg"><span>Total</span><span id="total">PKR 0</span></div>
+      <button onclick="goToCheckout()" class="btn btn-coral w-full mt-4">Proceed to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== CHECKOUT MODAL ============== -->
+<div id="checkoutModal" class="modal-backdrop" onclick="if(event.target===this)closeCheckout()">
+  <div class="modal-box">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="serif text-3xl font-bold text-forest">Checkout</h2>
+      <button onclick="closeCheckout()" class="w-10 h-10 rounded-full hover:bg-cream-2 flex items-center justify-center">✕</button>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <label class="block text-sm font-bold text-forest mb-2">Full Name *</label>
+        <input id="coName" class="field" placeholder="Enter your full name" required>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-forest mb-2">Email *</label>
+        <input id="coEmail" type="email" class="field" placeholder="you@example.com" required>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-forest mb-2">Phone / WhatsApp *</label>
+        <input id="coPhone" class="field" placeholder="+92 3xx xxxxxxx" required>
+      </div>
+      <div>
+        <label class="block text-sm font-bold text-forest mb-2">Order Notes (optional)</label>
+        <input id="coNotes" class="field" placeholder="Any special instructions">
+      </div>
+    </div>
+
+    <!-- Order summary -->
+    <div class="bg-cream-2 rounded-2xl p-5 mb-6">
+      <h3 class="serif text-xl font-bold text-forest mb-3">Order Summary</h3>
+      <div id="coItems" class="text-sm space-y-1 mb-3"></div>
+      <div class="flex justify-between font-bold text-forest text-lg pt-3 border-t border-[#eadfce]"><span>Total</span><span id="coTotal">PKR 0</span></div>
+    </div>
+
+    <!-- Payment method -->
+    <div class="mb-5">
+      <label class="block text-sm font-bold text-forest mb-3">Select Payment Method *</label>
+      <div class="flex gap-3 flex-wrap">
+        <div class="pay-tab active" onclick="selectPay(this,'easypaisa')">
+          <div class="text-2xl mb-1">💚</div>
+          <p class="font-bold text-sm">EasyPaisa</p>
+        </div>
+        <div class="pay-tab" onclick="selectPay(this,'jazzcash')">
+          <div class="text-2xl mb-1">🔴</div>
+          <p class="font-bold text-sm">JazzCash</p>
+        </div>
+        <div class="pay-tab" onclick="selectPay(this,'bank')">
+          <div class="text-2xl mb-1">🏦</div>
+          <p class="font-bold text-sm">Bank Transfer</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment instructions -->
+    <div id="payInfo" class="bg-forest text-cream rounded-2xl p-6 mb-5">
+      <h3 class="font-bold text-lg mb-2">Send Payment To:</h3>
+      <div class="flex items-center gap-3 bg-forest-2 rounded-xl p-4 mb-3">
+        <span class="text-3xl">💚</span>
+        <div>
+          <p class="text-xs text-gold uppercase tracking-wider">EasyPaisa Account</p>
+          <p class="font-bold text-xl" id="payNumber">+92 348 0103280</p>
+          <p class="text-xs text-cream/60">Account Title: Store-Digital Store</p>
+        </div>
+        <button onclick="copyNumber()" class="ml-auto bg-coral hover:bg-coral-2 px-4 py-2 rounded-lg text-sm font-bold transition">Copy</button>
+      </div>
+      <div class="text-sm text-cream/80 leading-relaxed">
+        <p>1. Send the total amount to the number above.</p>
+        <p>2. Take a screenshot of the payment confirmation.</p>
+        <p>3. Upload the screenshot below and place your order.</p>
+        <p>4. We'll verify and email your download links within 30 minutes.</p>
+      </div>
+    </div>
+
+    <!-- Screenshot upload -->
+    <div class="mb-5">
+      <label class="block text-sm font-bold text-forest mb-2">Upload Payment Screenshot *</label>
+      <label for="payFile" class="block border-2 border-dashed border-[#eadfce] rounded-xl p-6 text-center cursor-pointer hover:border-coral hover:bg-cream-2 transition bg-cream">
+        <input id="payFile" type="file" accept="image/*" class="hidden" onchange="handleFile(this)">
+        <div id="filePlaceholder">
+          <div class="text-4xl mb-2">📸</div>
+          <p class="font-semibold text-forest">Click to upload payment screenshot</p>
+          <p class="text-xs text-gray-500 mt-1">JPG, PNG up to 5MB</p>
+        </div>
+        <div id="filePreview" class="hidden">
+          <img id="previewImg" class="max-h-40 mx-auto rounded-lg">
+          <p id="fileName" class="text-sm font-semibold text-forest mt-2"></p>
+        </div>
+      </label>
+    </div>
+
+    <button onclick="placeOrder()" class="btn btn-coral w-full text-lg">Place Order & Send Payment →</button>
+    <p class="text-xs text-gray-500 text-center mt-3">By placing this order, you agree to our Privacy Policy.</p>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const products = [
+  {id:1,name:"Cinematic Lightroom Preset Pack",category:"presets",price:2500,rating:4.9,sales:320,color:"Teal",img:"https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80",badge:"Hot"},
+  {id:2,name:"Ultimate Figma UI Kit 2026",category:"templates",price:5500,rating:4.8,sales:210,color:"Blue",img:"https://images.unsplash.com/photo-1559028012-481c04fa702d?w=600&q=80",badge:"Bestseller"},
+  {id:3,name:"The Freelancer's Ebook Bundle",category:"ebooks",price:1500,rating:4.7,sales:450,color:"Green",img:"https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80",badge:"New"},
+  {id:4,name:"Full-Stack Web Dev Course",category:"courses",price:12000,rating:5.0,sales:180,color:"Orange",img:"https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80",badge:"Premium"},
+  {id:5,name:"Minimal Notion Templates",category:"templates",price:1800,rating:4.6,sales:390,color:"Pink",img:"https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&q=80",badge:""},
+  {id:6,name:"Retro Film Photography Presets",category:"presets",price:2200,rating:4.8,sales:280,color:"Purple",img:"https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=600&q=80",badge:""},
+  {id:7,name:"Digital Marketing Masterclass",category:"courses",price:8500,rating:4.9,sales:160,color:"Red",img:"https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80",badge:"Trending"},
+  {id:8,name:"Handlettering Font Pack",category:"templates",price:1200,rating:4.5,sales:520,color:"Yellow",img:"https://images.unsplash.com/photo-1600003014755-ba31aa59c4b4?w=600&q=80",badge:""},
+  {id:9,name:"Startup Business Ebook",category:"ebooks",price:999,rating:4.6,sales:610,color:"Teal",img:"https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80",badge:""},
+  {id:10,name:"Pro Icon Set — 1000 Icons",category:"templates",price:3500,rating:4.9,sales:240,color:"Blue",img:"https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&q=80",badge:"Hot"},
+  {id:11,name:"Portrait Retouching Course",category:"courses",price:6500,rating:4.8,sales:140,color:"Pink",img:"https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&q=80",badge:""},
+  {id:12,name:"Wedding Photography Presets",category:"presets",price:2800,rating:4.7,sales:200,color:"Gold",img:"https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80",badge:"New"},
+  {id:13,name:"Canva Social Media Templates",category:"templates",price:1600,rating:4.6,sales:480,color:"Orange",img:"https://images.unsplash.com/photo-1611162617213-5d7a3939f361?w=600&q=80",badge:"Bestseller"},
+  {id:14,name:"Mindset & Productivity Ebook",category:"ebooks",price:799,rating:4.5,sales:720,color:"Green",img:"https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&q=80",badge:""},
+  {id:15,name:"After Effects Motion Pack",category:"courses",price:4500,rating:4.9,sales:110,color:"Purple",img:"https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=600&q=80",badge:"Premium"},
+  {id:16,name:"Moody Landscape Presets",category:"presets",price:2000,rating:4.8,sales:340,color:"Teal",img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",badge:""}
+];
+
+let cart = JSON.parse(localStorage.getItem('ph_cart')||'[]');
+let activeCategories = new Set();
+let activeColor = 'All';
+let slideIdx = 0;
+let slideTimer;
+
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('active',l.dataset.page===page));
+  
+  // Load orders page data when navigating to orders
+  if (page === 'orders') {
+    renderOrdersPage();
+  }
+  
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleSearch(){
+  document.getElementById('searchBar').classList.toggle('hidden');
+  setTimeout(()=>document.getElementById('globalSearch').focus(),100);
+}
+function toggleMobile(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+function initCarousel(){
+  const slides = document.getElementById('slides').children.length;
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML='';
+  for(let i=0;i<slides;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.onclick=()=>goToSlide(i);
+    dotsEl.appendChild(d);
+  }
+  startAutoSlide();
+}
+function goToSlide(i){
+  const total=document.getElementById('slides').children.length;
+  slideIdx=(i+total)%total;
+  document.getElementById('slides').style.transform=`translateX(-${slideIdx*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,idx)=>d.classList.toggle('active',idx===slideIdx));
+}
+function moveSlide(dir){goToSlide(slideIdx+dir);startAutoSlide();}
+function startAutoSlide(){clearInterval(slideTimer);slideTimer=setInterval(()=>goToSlide(slideIdx+1),5500);}
+
+function productCard(p){
+  return `
+  <div class="product-card">
+    <div class="relative overflow-hidden">
+      ${p.badge?`<span class="badge">${p.badge}</span>`:''}
+      <img src="${p.img}" class="w-full aspect-[4/3] object-cover">
+      <div class="float-tag">${p.color}</div>
+    </div>
+    <div class="p-5">
+      <p class="text-xs text-coral font-bold uppercase tracking-wider mb-1">${p.category}</p>
+      <h3 class="serif text-lg font-bold text-forest leading-snug mb-2 min-h-[56px]">${p.name}</h3>
+      <div class="flex items-center gap-1 mb-3 text-sm">
+        <span class="text-gold">★ ${p.rating}</span>
+        <span class="text-gray-400">· ${p.sales} sales</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <p class="text-xl font-bold text-forest">PKR ${p.price.toLocaleString()}</p>
+        <button onclick="addToCart(${p.id})" class="btn btn-primary !py-2 !px-4 text-sm">+ Add</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFeatured(){
+  const top=[...products].sort((a,b)=>b.sales-a.sales).slice(0,8);
+  document.getElementById('featuredGrid').innerHTML=top.map(productCard).join('');
+}
+
+function renderProducts(){
+  const search=(document.getElementById('collSearch')?.value||document.getElementById('globalSearch')?.value||'').toLowerCase();
+  const maxPrice=parseInt(document.getElementById('priceRange')?.value||25000);
+  const sort=document.getElementById('sortSelect')?.value||'featured';
+
+  let list=products.filter(p=>{
+    if(activeCategories.size && !activeCategories.has(p.category))return false;
+    if(activeColor!=='All' && p.color!==activeColor)return false;
+    if(p.price>maxPrice)return false;
+    if(search && !p.name.toLowerCase().includes(search) && !p.category.includes(search))return false;
+    return true;
+  });
+
+  if(sort==='low')list.sort((a,b)=>a.price-b.price);
+  else if(sort==='high')list.sort((a,b)=>b.price-a.price);
+  else if(sort==='rating')list.sort((a,b)=>b.rating-a.rating);
+
+  const grid=document.getElementById('productGrid');
+  if(!grid)return;
+  if(list.length===0){
+    grid.innerHTML=`<div class="col-span-full text-center py-16 text-gray-500"><p class="text-5xl mb-3">🔍</p><p class="font-semibold">No products match your filters.</p><button onclick="resetFilters()" class="btn btn-primary mt-4">Reset Filters</button></div>`;
+  }else{
+    grid.innerHTML=list.map(productCard).join('');
+  }
+  const rc=document.getElementById('resultCount');
+  if(rc)rc.textContent=`Showing ${list.length} product${list.length!==1?'s':''}`;
+}
+
+function renderFilters(){
+  const cats=['ebooks','templates','courses','presets'];
+  document.getElementById('categoryFilters').innerHTML=`
+    <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" class="accent-[var(--forest)]" onchange="toggleCategory('all',this.checked)" checked> All Categories</label>
+    `+cats.map(c=>`<label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" class="accent-[var(--forest)] cat-cb" data-cat="${c}" onchange="toggleCategory('${c}',this.checked)"> ${c.charAt(0).toUpperCase()+c.slice(1)}</label>`).join('');
+
+  const colors=['All','Teal','Blue','Green','Orange','Pink','Purple','Red','Yellow','Gold'];
+  const colorMap={All:'#888',Teal:'#0d9488',Blue:'#3b82f6',Green:'#16a34a',Orange:'#f97316',Pink:'#ec4899',Purple:'#8b5cf6',Red:'#dc2626',Yellow:'#eab308',Gold:'#d4a44a'};
+  document.getElementById('colorSwatches').innerHTML=colors.map(c=>`<div class="swatch ${c==='All'?'active':''}" style="background:${colorMap[c]}" onclick="setColor('${c}',this)" title="${c}"></div>`).join('');
+}
+
+function toggleCategory(cat,checked){
+  if(cat==='all'){
+    activeCategories.clear();
+    document.querySelectorAll('.cat-cb').forEach(cb=>cb.checked=false);
+  }else{
+    if(checked)activeCategories.add(cat);else activeCategories.delete(cat);
+    document.querySelector('input[onchange*="all"]').checked=false;
+  }
+  if(activeCategories.size===0)document.querySelector('input[onchange*="all"]').checked=true;
+  renderProducts();
+}
+function setColor(c,el){
+  activeColor=c;
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
+}
+function resetFilters(){
+  activeCategories.clear();
+  activeColor='All';
+  document.getElementById('collSearch').value='';
+  document.getElementById('priceRange').value=25000;
+  document.getElementById('priceLabel').innerText='Up to 25000';
+  document.getElementById('sortSelect').value='featured';
+  renderFilters();
+  renderProducts();
+}
+function filterByCategory(cat){
+  showPage('collection');
+  activeCategories.clear();
+  activeCategories.add(cat);
+  renderFilters();
+  document.querySelectorAll('.cat-cb').forEach(cb=>cb.checked=cb.dataset.cat===cat);
+  document.querySelector('input[onchange*="all"]').checked=false;
+  renderProducts();
+}
+function handleSearch(v){showPage('collection');document.getElementById('collSearch').value=v;renderProducts();}
+
+/* ============== CART ============== */
+function addToCart(id){
+  const existing=cart.find(c=>c.id===id);
+  if(existing)existing.qty++;
+  else cart.push({id,qty:1});
+  saveCart();
+  showToast('Added to cart ✓');
+}
+
+/* ============== LOCAL STORAGE FUNCTIONS ============== */
+function saveUserInfo(name, email, phone) {
+  const userInfo = {
+    name,
+    email, 
+    phone,
+    lastUpdated: new Date().toISOString()
+  };
+  localStorage.setItem('ph_user_info', JSON.stringify(userInfo));
+}
+
+function getUserInfo() {
+  const stored = localStorage.getItem('ph_user_info');
+  return stored ? JSON.parse(stored) : null;
+}
+
+function saveOrderToLocalStorage(orderData) {
+  // Get existing orders
+  let orders = JSON.parse(localStorage.getItem('ph_orders') || '[]');
+  
+  // Add new order
+  orders.unshift(orderData); // Add to beginning of array (newest first)
+  
+  // Keep only last 50 orders to prevent storage overflow
+  if (orders.length > 50) {
+    orders = orders.slice(0, 50);
+  }
+  
+  // Save back to localStorage
+  localStorage.setItem('ph_orders', JSON.stringify(orders));
+  
+  console.log('Order saved to localStorage:', orderData.orderId);
+}
+
+function getAllOrders() {
+  return JSON.parse(localStorage.getItem('ph_orders') || '[]');
+}
+
+function getOrderById(orderId) {
+  const orders = getAllOrders();
+  return orders.find(order => order.orderId === orderId);
+}
+
+function getSelectedPaymentMethod() {
+  const activeTab = document.querySelector('.pay-tab.active');
+  if (activeTab.textContent.includes('EasyPaisa')) return 'EasyPaisa';
+  if (activeTab.textContent.includes('JazzCash')) return 'JazzCash';
+  if (activeTab.textContent.includes('Bank')) return 'Bank Transfer';
+  return 'EasyPaisa';
+}
+
+// Load user info when page loads and auto-fill checkout form
+function loadSavedUserInfo() {
+  const userInfo = getUserInfo();
+  if (userInfo) {
+    document.getElementById('coName').value = userInfo.name || '';
+    document.getElementById('coEmail').value = userInfo.email || '';
+    document.getElementById('coPhone').value = userInfo.phone || '';
+  }
+}
+
+function renderOrdersPage() {
+  const userInfo = getUserInfo();
+  const orders = getAllOrders();
+  
+  // Display user information
+  const userInfoDisplay = document.getElementById('userInfoDisplay');
+  if (userInfo) {
+    userInfoDisplay.innerHTML = `
+      <div class="space-y-2">
+        <p><strong>Name:</strong> ${userInfo.name}</p>
+        <p><strong>Email:</strong> ${userInfo.email}</p>
+        <p><strong>Phone:</strong> ${userInfo.phone}</p>
+        <p class="text-xs text-gray-400">Last updated: ${new Date(userInfo.lastUpdated).toLocaleDateString()}</p>
+      </div>
+    `;
+  } else {
+    userInfoDisplay.innerHTML = '<div class="text-center text-gray-500 py-4">No saved information</div>';
+  }
+  
+  // Calculate totals
+  const totalOrders = orders.length;
+  const totalSpent = orders.reduce((sum, order) => sum + order.totalAmount, 0);
+  
+  document.getElementById('totalOrders').textContent = totalOrders;
+  document.getElementById('totalSpent').textContent = totalSpent.toLocaleString();
+  
+  // Display orders
+  const ordersContainer = document.getElementById('ordersContainer');
+  if (orders.length === 0) {
+    ordersContainer.innerHTML = `
+      <div class="text-center py-12 text-gray-500">
+        <div class="text-5xl mb-3">📦</div>
+        <p class="font-semibold">No orders found</p>
+        <button onclick="showPage('collection')" class="btn btn-primary mt-4">Start Shopping</button>
+      </div>
+    `;
+  } else {
+    ordersContainer.innerHTML = orders.map(order => `
+      <div class="bg-white rounded-2xl p-6 border border-[#eadfce]">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="serif text-xl font-bold text-forest">Order #${order.orderId}</h3>
+            <p class="text-sm text-gray-500">${new Date(order.orderDate).toLocaleDateString()} at ${new Date(order.orderDate).toLocaleTimeString()}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xl font-bold text-forest">PKR ${order.totalAmount.toLocaleString()}</p>
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold ${
+              order.status === 'completed' ? 'bg-green-100 text-green-800' :
+              order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }">
+              ${order.status.toUpperCase()}
+            </span>
+          </div>
+        </div>
+        
+        <div class="space-y-2 mb-4">
+          ${order.items.map(item => `
+            <div class="flex justify-between text-sm">
+              <span>${item.name} × ${item.quantity}</span>
+              <span>PKR ${item.total.toLocaleString()}</span>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div class="border-t border-[#eadfce] pt-4 flex justify-between items-center">
+          <div class="text-sm text-gray-600">
+            <p><strong>Payment:</strong> ${order.paymentMethod}</p>
+            <p><strong>Customer:</strong> ${order.customerInfo.name}</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="showOrderDetails('${order.orderId}')" class="btn btn-outline !py-2 !px-4 text-sm">View Details</button>
+            ${order.status === 'completed' ? 
+              '<button class="btn btn-primary !py-2 !px-4 text-sm">Download Files</button>' : 
+              '<button class="btn btn-coral !py-2 !px-4 text-sm" disabled>Processing...</button>'
+            }
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function showOrderDetails(orderId) {
+  const order = getOrderById(orderId);
+  if (!order) return;
+  
+  alert(`Order Details:
+Order ID: ${order.orderId}
+Date: ${new Date(order.orderDate).toLocaleString()}
+Customer: ${order.customerInfo.name}
+Email: ${order.customerInfo.email}
+Phone: ${order.customerInfo.phone}
+Total: PKR ${order.totalAmount.toLocaleString()}
+Status: ${order.status}
+Payment Method: ${order.paymentMethod}
+
+Items:
+${order.items.map(item => `• ${item.name} × ${item.quantity} = PKR ${item.total.toLocaleString()}`).join('\n')}
+  `);
+}
+function removeFromCart(id){
+  cart=cart.filter(c=>c.id!==id);
+  saveCart();
+  renderCart();
+}
+function changeQty(id,delta){
+  const it=cart.find(c=>c.id===id);
+  if(!it)return;
+  it.qty+=delta;
+  if(it.qty<=0)cart=cart.filter(c=>c.id!==id);
+  saveCart();
+  renderCart();
+}
+function saveCart(){
+  localStorage.setItem('ph_cart',JSON.stringify(cart));
+  const badge=document.getElementById('cartBadge');
+  const count=cart.reduce((s,c)=>s+c.qty,0);
+  badge.textContent=count;
+  badge.classList.toggle('hidden',count===0);
+  badge.classList.remove('cart-count');
+  void badge.offsetWidth;
+  badge.classList.add('cart-count');
+}
+function openCart(){
+  document.getElementById('cartModal').classList.add('open');
+  renderCart();
+}
+function closeCart(){document.getElementById('cartModal').classList.remove('open');}
+function renderCart(){
+  const items=document.getElementById('cartItems');
+  const empty=document.getElementById('cartEmpty');
+  const sum=document.getElementById('cartSummary');
+  if(cart.length===0){
+    items.innerHTML='';
+    empty.style.display='block';
+    sum.classList.add('hidden');
+    return;
+  }
+  empty.style.display='none';
+  sum.classList.remove('hidden');
+  let sub=0;
+  items.innerHTML=cart.map(c=>{
+    const p=products.find(x=>x.id===c.id);
+    sub+=p.price*c.qty;
+    return `<div class="flex gap-4 bg-cream-2 rounded-xl p-3">
+      <img src="${p.img}" class="w-20 h-20 rounded-lg object-cover">
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-forest text-sm leading-tight">${p.name}</p>
+        <p class="text-xs text-gray-500 mb-2">PKR ${p.price.toLocaleString()}</p>
+        <div class="flex items-center gap-2">
+          <button onclick="changeQty(${p.id},-1)" class="w-7 h-7 rounded-full bg-white border border-[#eadfce]">−</button>
+          <span class="text-sm font-bold w-6 text-center">${c.qty}</span>
+          <button onclick="changeQty(${p.id},1)" class="w-7 h-7 rounded-full bg-white border border-[#eadfce]">+</button>
+        </div>
+      </div>
+      <div class="text-right flex flex-col justify-between">
+        <button onclick="removeFromCart(${p.id})" class="text-coral text-xs hover:underline">Remove</button>
+        <p class="font-bold text-forest">PKR ${(p.price*c.qty).toLocaleString()}</p>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('subtotal').textContent='PKR '+sub.toLocaleString();
+  document.getElementById('total').textContent='PKR '+sub.toLocaleString();
+}
+
+/* ============== CHECKOUT ============== */
+function goToCheckout(){
+  if(cart.length===0){showToast('Your cart is empty');return;}
+  closeCart();
+  renderCheckout();
+  document.getElementById('checkoutModal').classList.add('open');
+  
+  // Auto-fill form with saved user information
+  setTimeout(loadSavedUserInfo, 100);
+}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
+function renderCheckout(){
+  let total=0;
+  document.getElementById('coItems').innerHTML=cart.map(c=>{
+    const p=products.find(x=>x.id===c.id);
+    total+=p.price*c.qty;
+    return `<div class="flex justify-between"><span>${p.name} × ${c.qty}</span><span>PKR ${(p.price*c.qty).toLocaleString()}</span></div>`;
+  }).join('');
+  document.getElementById('coTotal').textContent='PKR '+total.toLocaleString();
+}
+function selectPay(el,type){
+  document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const info=document.getElementById('payInfo');
+  const numEl=document.getElementById('payNumber');
+  numEl.textContent='+92 348 0103280';
+  if(type==='jazzcash'){
+    info.querySelector('span').textContent='🔴';
+    info.querySelector('p.text-xs').textContent='JazzCash Account';
+  }else if(type==='bank'){
+    info.querySelector('span').textContent='🏦';
+    info.querySelector('p.text-xs').textContent='Bank Account';
+  }else{
+    info.querySelector('span').textContent='💚';
+    info.querySelector('p.text-xs').textContent='EasyPaisa Account';
+  }
+}
+function copyNumber(){
+  navigator.clipboard.writeText('+923480103280');
+  showToast('Number copied ✓');
+}
+function handleFile(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById('filePlaceholder').classList.add('hidden');
+    document.getElementById('filePreview').classList.remove('hidden');
+    document.getElementById('previewImg').src=e.target.result;
+    document.getElementById('fileName').textContent=file.name;
+  };
+  reader.readAsDataURL(file);
+}
+function placeOrder(){
+  const name=document.getElementById('coName').value.trim();
+  const email=document.getElementById('coEmail').value.trim();
+  const phone=document.getElementById('coPhone').value.trim();
+  const notes=document.getElementById('coNotes').value.trim();
+  const file=document.getElementById('payFile').files[0];
+  
+  if(!name||!email||!phone){showToast('Please fill all required fields');return;}
+  if(!file){showToast('Please upload payment screenshot');return;}
+  
+  // Save user information to localStorage
+  saveUserInfo(name, email, phone);
+  
+  // Create order object
+  const orderId = 'PH' + Date.now().toString().slice(-6);
+  const orderData = {
+    orderId: orderId,
+    customerInfo: { name, email, phone, notes },
+    items: cart.map(c => {
+      const product = products.find(p => p.id === c.id);
+      return {
+        id: c.id,
+        name: product.name,
+        price: product.price,
+        quantity: c.qty,
+        total: product.price * c.qty
+      };
+    }),
+    totalAmount: cart.reduce((total, c) => {
+      const product = products.find(p => p.id === c.id);
+      return total + (product.price * c.qty);
+    }, 0),
+    orderDate: new Date().toISOString(),
+    status: 'pending',
+    paymentMethod: getSelectedPaymentMethod(),
+    paymentScreenshot: file.name
+  };
+  
+  // Save order to localStorage
+  saveOrderToLocalStorage(orderData);
+  
+  // Clear cart after successful order
+  cart = [];
+  saveCart();
+  
+  closeCheckout();
+  document.getElementById('checkoutModal').querySelector('.modal-box').innerHTML=`
+    <div class="text-center py-8">
+      <div class="w-20 h-20 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center text-5xl mb-5">✓</div>
+      <h2 class="serif text-3xl font-bold text-forest mb-3">Order Placed Successfully!</h2>
+      <p class="text-gray-600 max-w-md mx-auto">Thank you, <strong>${name}</strong>. We received your payment screenshot. Our team will verify it and email your download links within 30 minutes.</p>
+      <div class="bg-cream-2 rounded-xl p-4 mt-5 text-left max-w-sm mx-auto text-sm">
+        <p><strong>Order ID:</strong> #${orderId}</p>
+        <p class="mt-1"><strong>Email:</strong> ${email}</p>
+        <p class="mt-1"><strong>Phone:</strong> ${phone}</p>
+      </div>
+      <button onclick="location.reload()" class="btn btn-primary mt-6">Continue Shopping</button>
+    </div>`;
+  document.getElementById('checkoutModal').classList.add('open');
+  cart=[];
+  saveCart();
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+renderFilters();
+renderFeatured();
+renderProducts();
+initCarousel();
+saveCart();
+</script>
+</body>
+</html>
